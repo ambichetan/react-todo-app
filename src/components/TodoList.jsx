@@ -6,21 +6,23 @@ function TodoList({ todos }) {
 
   if (todos.length === 0) {
     return (
-      <div className="empty-state">
-        <p>No todos to display</p>
+      <div className="py-8 text-center">
+        <p className="text-[#8E8E93] dark:text-[#48484A] text-base font-[-apple-system]">
+          No reminders to display
+        </p>
       </div>
     )
   }
 
   return (
-    <ul className="todo-list">
+    <ul className="todo-list rounded-lg bg-white dark:bg-black">
       {todos.map(todo => (
         <TodoItem
           key={todo.id}
           todo={todo}
           onToggle={() => toggleTodo(todo.id)}
           onDelete={() => deleteTodo(todo.id)}
-          onEdit={(text) => editTodo(todo.id, text)}
+          onEdit={(text, datetime) => editTodo(todo.id, text, datetime)}
         />
       ))}
     </ul>

@@ -23,7 +23,8 @@ function todoReducer(state, action) {
           ...state.todos,
           {
             id: Date.now(),
-            text: action.payload,
+            text: action.payload.text,
+            datetime: action.payload.datetime,
             completed: false
           }
         ]
@@ -47,7 +48,11 @@ function todoReducer(state, action) {
         ...state,
         todos: state.todos.map(todo =>
           todo.id === action.payload.id
-            ? { ...todo, text: action.payload.text }
+            ? { 
+                ...todo, 
+                text: action.payload.text, 
+                datetime: action.payload.datetime 
+              }
             : todo
         )
       }
@@ -66,9 +71,9 @@ export function TodoProvider({ children }) {
   }, [state.todos])
 
   // Action creators
-  const addTodo = text => {
+  const addTodo = (text, datetime) => {
     if (text.trim()) {
-      dispatch({ type: ADD_TODO, payload: text })
+      dispatch({ type: ADD_TODO, payload: { text, datetime } })
     }
   }
 
@@ -80,9 +85,9 @@ export function TodoProvider({ children }) {
     dispatch({ type: DELETE_TODO, payload: id })
   }
 
-  const editTodo = (id, text) => {
+  const editTodo = (id, text, datetime) => {
     if (text.trim()) {
-      dispatch({ type: EDIT_TODO, payload: { id, text } })
+      dispatch({ type: EDIT_TODO, payload: { id, text, datetime } })
     }
   }
 

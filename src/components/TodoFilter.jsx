@@ -1,31 +1,31 @@
 function TodoFilter({ filter, setFilter }) {
   return (
-    <div className="flex justify-center gap-1 p-1 mb-6 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
+    <div className="flex justify-center p-1 mb-6 bg-[#F2F2F7] dark:bg-[#1C1C1E] rounded-lg">
       <button
-        className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+        className={`flex-1 px-4 py-1.5 text-[15px] font-[-apple-system] rounded-lg transition-all duration-200 ${
           filter === 'all'
-            ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+            ? 'bg-white dark:bg-[#2C2C2E] text-[#007AFF] dark:text-[#0A84FF] shadow-sm'
+            : 'text-[#8E8E93] dark:text-[#98989D] hover:text-[#007AFF] dark:hover:text-[#0A84FF]'
         }`}
         onClick={() => setFilter('all')}
       >
         All
       </button>
       <button
-        className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+        className={`flex-1 px-4 py-1.5 text-[15px] font-[-apple-system] rounded-lg transition-all duration-200 ${
           filter === 'active'
-            ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+            ? 'bg-white dark:bg-[#2C2C2E] text-[#007AFF] dark:text-[#0A84FF] shadow-sm'
+            : 'text-[#8E8E93] dark:text-[#98989D] hover:text-[#007AFF] dark:hover:text-[#0A84FF]'
         }`}
         onClick={() => setFilter('active')}
       >
         Active
       </button>
       <button
-        className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+        className={`flex-1 px-4 py-1.5 text-[15px] font-[-apple-system] rounded-lg transition-all duration-200 ${
           filter === 'completed'
-            ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-            : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+            ? 'bg-white dark:bg-[#2C2C2E] text-[#007AFF] dark:text-[#0A84FF] shadow-sm'
+            : 'text-[#8E8E93] dark:text-[#98989D] hover:text-[#007AFF] dark:hover:text-[#0A84FF]'
         }`}
         onClick={() => setFilter('completed')}
       >

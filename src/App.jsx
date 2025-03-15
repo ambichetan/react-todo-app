@@ -17,10 +17,10 @@ function App() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 py-8 transition-colors">
+    <div className="min-h-screen bg-[#F2F2F7] dark:bg-black py-8 transition-colors">
       <ThemeToggle />
-      <div className="max-w-md mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg p-8 ring-1 ring-gray-100 dark:ring-gray-700">
-        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 mb-6">Todo App</h1>
+      <div className="max-w-md mx-auto bg-white dark:bg-[#1C1C1E] rounded-xl shadow-sm p-6">
+        <h1 className="text-2xl font-semibold text-[#007AFF] dark:text-[#0A84FF] mb-6 font-[-apple-system]">Reminders</h1>
         <AddTodo />
         <TodoFilter filter={filter} setFilter={setFilter} />
         <TodoList todos={filteredTodos} />

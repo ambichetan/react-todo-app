@@ -15,19 +15,19 @@ function AddTodo() {
   }
 
   return (
-    <form className="flex gap-2 mb-6" onSubmit={handleSubmit}>
+    <form className="flex gap-3 mb-6" onSubmit={handleSubmit}>
       <input
         type="text"
-        className="flex-1 rounded-lg border-2 border-gray-200 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-500/20 transition-all duration-200 bg-white dark:bg-gray-700"
+        className="flex-1 rounded-lg px-4 py-3 text-base font-[-apple-system] bg-[#F2F2F7] dark:bg-[#1C1C1E] text-black dark:text-white placeholder-[#8E8E93] dark:placeholder-[#48484A] focus:outline-none focus:ring-2 focus:ring-[#007AFF] dark:focus:ring-[#0A84FF] transition-all"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new task..."
-        aria-label="Add a new task"
+        placeholder="New Reminder"
+        aria-label="Add a new reminder"
       />
       <button 
         type="submit" 
-        className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 text-white rounded-lg px-4 py-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-        aria-label="Add task"
+        className="bg-[#007AFF] hover:bg-[#007AFF]/90 dark:bg-[#0A84FF] dark:hover:bg-[#0A84FF]/90 text-white rounded-full w-10 h-10 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+        aria-label="Add reminder"
         disabled={!text.trim()}
       >
         <FaPlus />

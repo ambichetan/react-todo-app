@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+  background-color: #4f46e5; /* Example hover color */
+  color: #fff;
+}
+
+input {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+  border-color: #4f46e5; /* Example focus color */
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3); /* Example focus shadow */
+}

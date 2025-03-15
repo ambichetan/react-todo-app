@@ -3,7 +3,6 @@ import TodoList from './components/TodoList'
 import AddTodo from './components/AddTodo'
 import TodoFilter from './components/TodoFilter'
 import { useTodoContext } from './context/TodoContext'
-import './styles/App.css'
 
 function App() {
   const { todos } = useTodoContext()
@@ -17,13 +16,13 @@ function App() {
   })
 
   return (
-    <div className="app-container">
-      <div className="todo-app">
-        <h1>Todo App</h1>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow p-6">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Todo App</h1>
         <AddTodo />
         <TodoFilter filter={filter} setFilter={setFilter} />
         <TodoList todos={filteredTodos} />
-        <div className="todo-stats">
+        <div className="mt-4 text-sm text-gray-600">
           <p>{todos.filter(todo => !todo.completed).length} items left</p>
         </div>
       </div>

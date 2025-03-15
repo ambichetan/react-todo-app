@@ -19,9 +19,9 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   }
 
   return (
-    <li className="group flex items-center gap-3 py-2 px-4 hover:bg-gray-50">
+    <li className="group flex items-center gap-3 py-2 px-4 hover:bg-gray-50 dark:hover:bg-gray-700/50">
       <Checkbox.Root
-        className="flex h-5 w-5 items-center justify-center rounded border border-gray-300 bg-white data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+        className="flex h-5 w-5 items-center justify-center rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
         checked={todo.completed}
         onCheckedChange={onToggle}
       >
@@ -34,7 +34,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         <input
           ref={inputRef}
           type="text"
-          className="flex-1 rounded border px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 rounded border px-2 py-1 text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
           value={editText}
           onChange={(e) => setEditText(e.target.value)}
           onBlur={handleSave}
@@ -43,7 +43,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
       ) : (
         <span
           className={`flex-1 text-sm ${
-            todo.completed ? 'text-gray-400 line-through' : 'text-gray-700'
+            todo.completed ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-700 dark:text-gray-200'
           }`}
         >
           {todo.text}
@@ -52,13 +52,13 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
 
       <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
         <button
-          className="rounded p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+          className="rounded p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
           onClick={() => setIsEditing(!isEditing)}
         >
           <Pencil1Icon className="h-4 w-4" />
         </button>
         <button
-          className="rounded p-1 text-red-400 hover:bg-red-50 hover:text-red-600"
+          className="rounded p-1 text-red-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/30"
           onClick={onDelete}
         >
           <TrashIcon className="h-4 w-4" />

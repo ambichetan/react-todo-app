@@ -52,12 +52,14 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
       <div className="flex flex-col gap-3">
         <div className="h-px bg-gray-200 dark:bg-gray-800 -mx-4" />
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-black dark:text-white">Time</span>
+          <span className="text-sm font-medium text-black dark:text-white">
+            Time
+          </span>
           <input
             type="time"
             value={selectedTime}
             onChange={handleTimeChange}
-            className="appearance-none rounded-lg px-3 py-1.5 text-sm font-[-apple-system] bg-[#F2F2F7] dark:bg-[#1C1C1E] border border-gray-200 dark:border-gray-800 text-[#007AFF] dark:text-[#0A84FF] focus:outline-none focus:border-[#007AFF] dark:focus:border-[#0A84FF] transition-colors [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-datetime-edit]:font-medium"
+            className="appearance-none rounded-lg px-3 py-1.5 text-sm bg-[#F2F2F7] dark:bg-[#1C1C1E] border border-gray-200 dark:border-gray-800 text-[#007AFF] dark:text-[#0A84FF] focus:outline-none focus:border-[#007AFF] dark:focus:border-[#0A84FF] transition-colors [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-datetime-edit]:font-medium"
           />
         </div>
       </div>
@@ -92,14 +94,14 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
           <input
             ref={inputRef}
             type="text"
-            className="flex-1 rounded-lg px-3 py-2 text-base font-[-apple-system] bg-[#F2F2F7] dark:bg-[#1C1C1E] border-0 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#007AFF] dark:focus:ring-[#0A84FF]"
+            className="flex-1 rounded-lg px-3 py-2 text-base bg-[#F2F2F7] dark:bg-[#1C1C1E] border-0 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#007AFF] dark:focus:ring-[#0A84FF]"
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSave()}
           />
         ) : (
           <span
-            className={`flex-1 text-base font-[-apple-system] ${
+            className={`flex-1 text-base ${
               todo.completed
                 ? "text-[#8E8E93] dark:text-[#48484A] line-through"
                 : "text-black dark:text-white"
@@ -114,7 +116,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         {isEditing ? (
           <Popover.Root>
             <Popover.Trigger asChild>
-              <button className="flex-1 rounded-lg px-3 py-2 text-base font-[-apple-system] bg-[#F2F2F7] dark:bg-[#1C1C1E] text-left dark:text-white hover:bg-[#E5E5EA] dark:hover:bg-[#2C2C2E] transition-colors flex items-center gap-2">
+              <button className="flex-1 rounded-lg px-3 py-2 text-base bg-[#F2F2F7] dark:bg-[#1C1C1E] text-left dark:text-white hover:bg-[#E5E5EA] dark:hover:bg-[#2C2C2E] transition-colors flex items-center gap-2">
                 <CalendarIcon className="h-4 w-4 text-[#8E8E93] dark:text-[#48484A]" />
                 <span>
                   {selectedDate

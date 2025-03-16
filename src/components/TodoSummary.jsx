@@ -1,16 +1,16 @@
 import { useTodoContext } from "../context/TodoContext";
 
 function TodoSummary() {
-  const { generateSummary, summary, loadingSummary, todos } = useTodoContext();
+  const { generateSummary, summary, loadingSummary, todos, dispatch } = useTodoContext();
 
   const activeTodoCount = todos.filter((todo) => !todo.completed).length;
 
-  const handleGenerateClick = () => {
-    console.log("Generate button clicked");
-    console.log("Active todos count:", activeTodoCount);
-    console.log("Loading state:", loadingSummary);
-    generateSummary();
-  };
+const handleGenerateClick = () => {
+  console.log("Generate button clicked");
+  console.log("Active todos count:", activeTodoCount);
+  console.log("Loading state:", loadingSummary);
+  generateSummary(todos, dispatch);
+};
 
   return (
     <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">

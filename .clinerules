@@ -1,0 +1,27 @@
+# .clinerules
+
+## Project Intelligence
+
+### Critical Implementation Paths
+- **State Management**: Use the Context API for managing global state to avoid prop drilling.
+- **Styling**: Use Tailwind CSS for utility-first styling to ensure rapid development and consistency.
+- **Component Design**: Follow a modular and reusable component-based design approach.
+
+### User Preferences and Workflow
+- **Development Setup**: Use Vite for the build tool due to its fast development server and efficient build process.
+- **Documentation**: Maintain a Memory Bank with core files to document project context and progress.
+
+### Project-Specific Patterns
+- **Responsive Design**: Implement responsive design using Tailwind CSS utilities and media queries.
+- **Accessibility**: Ensure the application is accessible by following best practices for web accessibility.
+
+### Known Challenges
+- **State Management Complexity**: Managing global state with the Context API can become complex with a large number of components. Ensure state is organized and easily accessible.
+- **Styling Consistency**: Maintain consistency in styling by adhering to Tailwind CSS utilities and avoiding custom CSS.
+
+### Evolution of Project Decisions
+- **Initial Setup**: Decided to use React, Vite, and Tailwind CSS for the project due to their efficiency and modern capabilities.
+
+### Tool Usage Patterns
+- **Memory Bank**: Use the Memory Bank to document project context and progress, ensuring all core files are populated with relevant information.
+- **Version Control**: Use Git for version control to track changes and collaborate effectively.

@@ -3,6 +3,7 @@ import TodoList from './components/TodoList'
 import AddTodo from './components/AddTodo'
 import TodoFilter from './components/TodoFilter'
 import ThemeToggle from './components/ThemeToggle'
+import TodoSummary from './components/TodoSummary'
 import { useTodoContext } from './context/TodoContext'
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <AddTodo />
         <TodoFilter filter={filter} setFilter={setFilter} />
         <TodoList todos={filteredTodos} />
+        <TodoSummary />
         <div className="mt-4 text-sm font-medium">
           <p className="text-gray-500 dark:text-gray-400">{todos.filter(todo => !todo.completed).length} items left</p>
         </div>

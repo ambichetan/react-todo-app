@@ -7,7 +7,7 @@ function TodoList({ todos }) {
   if (todos.length === 0) {
     return (
       <div className="py-8 text-center">
-        <p className="text-[#8E8E93] dark:text-[#48484A] text-base font-[-apple-system]">
+        <p className="text-muted-foreground text-base">
           No reminders to display
         </p>
       </div>
@@ -15,7 +15,7 @@ function TodoList({ todos }) {
   }
 
   return (
-    <ul className="todo-list rounded-lg bg-white dark:bg-black">
+    <ul className="todo-list rounded-lg bg-background">
       {todos.map(todo => (
         <TodoItem
           key={todo.id}

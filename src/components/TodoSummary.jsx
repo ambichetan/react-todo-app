@@ -1,39 +1,44 @@
 import { useTodoContext } from "../context/TodoContext";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 
 function TodoSummary() {
   const { generateSummary, summary, loadingSummary, todos, dispatch } = useTodoContext();
 
   const activeTodoCount = todos.filter((todo) => !todo.completed).length;
 
-const handleGenerateClick = () => {
-  console.log("Generate button clicked");
-  console.log("Active todos count:", activeTodoCount);
-  console.log("Loading state:", loadingSummary);
-  generateSummary(todos, dispatch);
-};
+  const handleGenerateClick = () => {
+    generateSummary(todos, dispatch);
+  };
 
   return (
     <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h2 className="text-lg font-semibold">
           AI Summary
         </h2>
-        <button
+        <Button
           onClick={handleGenerateClick}
           disabled={loadingSummary || activeTodoCount === 0}
-          className="px-4 py-2 text-sm font-medium text-white bg-[#007AFF] dark:bg-[#0A84FF] rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
         >
           {loadingSummary
             ? "Generating..."
             : activeTodoCount === 0
             ? "No Active Todos"
             : "Generate Summary"}
-        </button>
+        </Button>
       </div>
       {summary && (
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-          <p className="text-gray-700 dark:text-gray-300">{summary}</p>
-        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-muted-foreground">{summary}</p>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

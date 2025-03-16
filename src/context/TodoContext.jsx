@@ -29,7 +29,7 @@ function todoReducer(state, action) {
           {
             id: Date.now(),
             text: action.payload.text,
-            datetime: action.payload.datetime,
+            datetime: action.payload.datetime || "",
             completed: false,
           },
         ],

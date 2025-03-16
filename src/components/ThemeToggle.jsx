@@ -1,17 +1,19 @@
-import React from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 
 export default function ThemeToggle() {
   const { isDark, toggleTheme } = useTheme();
 
   return (
-    <button
+    <Button
+      variant="outline"
+      size="icon"
       onClick={toggleTheme}
-      className="fixed top-4 right-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 transition-colors"
+      className="fixed top-4 right-4"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      {isDark ? <FiSun size={20} /> : <FiMoon size={20} />}
-    </button>
+      {isDark ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+    </Button>
   );
 }

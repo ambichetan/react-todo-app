@@ -24,8 +24,8 @@ Completed Features:
 - Persistent category data
 
 ### Phase 2: Priority and Due Dates
-- [ ] Priority levels (High, Medium, Low)
-- [ ] Priority indicators and sorting
+- [x] Priority levels (High, Medium, Low)
+- [x] Priority indicators and sorting
 - [ ] Enhanced due date features
 - [ ] Recurring todos
 - [ ] Reminders/notifications

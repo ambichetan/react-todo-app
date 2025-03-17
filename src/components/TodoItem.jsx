@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { CategoryBadge } from "@/components/ui/category-badge";
+import { PrioritySelector, PriorityBadge } from "@/components/ui/priority-selector";
 import CategorySelector from "@/components/CategorySelector";
 import { useCategoryContext } from "@/context/CategoryContext";
 
@@ -30,6 +31,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   const [selectedTime, setSelectedTime] = useState(
     todo.datetime ? format(new Date(todo.datetime), "HH:mm") : ""
   );
+  const [selectedPriority, setSelectedPriority] = useState(todo.priority || "medium");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -58,7 +60,14 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
           console.error("Error creating datetime:", e);
         }
       }
-      onEdit(todo.id, editText, datetime, selectedCategory);
+      onEdit(
+        todo.id,
+        editText,
+        datetime,
+        selectedCategory,
+        todo.tags || [],
+        selectedPriority
+      );
       setIsEditing(false);
     }
   };
@@ -66,7 +75,28 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   const handleSelectCategory = (category) => {
     setSelectedCategory(category);
     if (!isEditing) {
-      onEdit(todo.id, todo.text, todo.datetime, category);
+      onEdit(
+        todo.id,
+        todo.text,
+        todo.datetime,
+        category,
+        todo.tags || [],
+        todo.priority
+      );
+    }
+  };
+
+  const handlePriorityChange = (priority) => {
+    setSelectedPriority(priority);
+    if (!isEditing) {
+      onEdit(
+        todo.id,
+        todo.text,
+        todo.datetime,
+        todo.category,
+        todo.tags || [],
+        priority
+      );
     }
   };
 
@@ -107,15 +137,15 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   };
 
   return (
-    <li className="group flex flex-wrap items-center gap-4 py-3 px-3 border-b border-border">
-      <div className="flex items-center gap-4 flex-1 min-w-[200px]">
+    <li className="group flex flex-wrap items-start gap-4 py-3 px-3 border-b border-border">
+      <div className="flex items-center gap-4 min-w-[200px] max-w-full flex-1">
         <Checkbox
           checked={todo.completed}
           onCheckedChange={onToggle}
-          className="h-[22px] w-[22px] rounded-full"
+          className="h-[22px] w-[22px] rounded-full mt-1"
         />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2 flex-1">
           {isEditing ? (
             <Input
               ref={inputRef}
@@ -126,16 +156,19 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
               onKeyDown={(e) => e.key === "Enter" && handleSave()}
             />
           ) : (
-            <div className="flex flex-col gap-1">
-              <span
-                className={`text-base ${
-                  todo.completed
-                    ? "text-muted-foreground line-through"
-                    : "text-foreground"
-                }`}
-              >
-                {todo.text}
-              </span>
+            <div className="flex flex-col gap-1 flex-1">
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-base ${
+                    todo.completed
+                      ? "text-muted-foreground line-through"
+                      : "text-foreground"
+                  }`}
+                >
+                  {todo.text}
+                </span>
+                <PriorityBadge priority={todo.priority} />
+              </div>
               {todo.category && (
                 <CategoryBadge category={todo.category} className="w-fit" />
               )}
@@ -144,20 +177,28 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 flex-1 min-w-[350px]">
-        <div className="flex gap-2 flex-1">
+      <div className="flex flex-wrap items-center gap-4 min-w-[200px] max-w-full flex-1">
+        <div className="flex flex-wrap gap-2 flex-1">
           {isEditing && (
-            <CategorySelector
-              selectedCategory={selectedCategory}
-              onSelectCategory={handleSelectCategory}
-            />
+            <>
+              <CategorySelector
+                selectedCategory={selectedCategory}
+                onSelectCategory={handleSelectCategory}
+                className="flex-1"
+              />
+              <PrioritySelector
+                value={selectedPriority}
+                onChange={handlePriorityChange}
+                className="flex-none"
+              />
+            </>
           )}
           {isEditing ? (
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="flex-1 justify-start text-left font-normal"
+                  className="flex-1 justify-start text-left font-normal min-w-[200px]"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {selectedDate
@@ -186,7 +227,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
           )}
         </div>
 
-        <div className="flex gap-3 opacity-100 md:opacity-0 transition-opacity group-hover:opacity-100 items-center">
+        <div className="flex gap-3 opacity-100 md:opacity-0 transition-opacity group-hover:opacity-100 items-center flex-none">
           {isEditing ? (
             <Button
               size="icon"
@@ -197,14 +238,21 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
               <CheckIcon className="h-4 w-4" />
             </Button>
           ) : (
-            <Button
-              size="icon"
-              variant="ghost"
-              className="text-sky-500 hover:text-sky-600 hover:bg-sky-500/10"
-              onClick={() => setIsEditing(true)}
-            >
-              <Pencil1Icon className="h-4 w-4" />
-            </Button>
+            <>
+              <PrioritySelector
+                value={todo.priority}
+                onChange={handlePriorityChange}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+              <Button
+                size="icon"
+                variant="ghost"
+                className="text-sky-500 hover:text-sky-600 hover:bg-sky-500/10"
+                onClick={() => setIsEditing(true)}
+              >
+                <Pencil1Icon className="h-4 w-4" />
+              </Button>
+            </>
           )}
           <Button
             size="icon"

@@ -12,6 +12,7 @@ const initialState = {
     category: null,
     tags: [],
     status: "all", // all, active, completed
+    priority: null, // null, high, medium, low
   },
 };
 
@@ -38,6 +39,7 @@ function todoReducer(state, action) {
             completed: false,
             category: action.payload.category || null,
             tags: action.payload.tags || [],
+            priority: action.payload.priority || "medium",
           },
         ],
       };
@@ -64,6 +66,9 @@ function todoReducer(state, action) {
                 ...todo,
                 text: action.payload.text,
                 datetime: action.payload.datetime,
+                category: action.payload.category,
+                tags: action.payload.tags,
+                priority: action.payload.priority || todo.priority,
               }
             : todo
         ),
@@ -101,9 +106,9 @@ export function TodoProvider({ children }) {
   }, [state.todos]);
 
   // Action creators
-  const addTodo = (text, datetime, category = null, tags = []) => {
+  const addTodo = (text, datetime, category = null, tags = [], priority = "medium") => {
     if (text.trim()) {
-      dispatch({ type: ADD_TODO, payload: { text, datetime, category, tags } });
+      dispatch({ type: ADD_TODO, payload: { text, datetime, category, tags, priority } });
     }
   };
 
@@ -115,9 +120,12 @@ export function TodoProvider({ children }) {
     dispatch({ type: DELETE_TODO, payload: id });
   };
 
-  const editTodo = (id, text, datetime, category = null, tags = []) => {
+  const editTodo = (id, text, datetime, category = null, tags = [], priority) => {
     if (text.trim()) {
-      dispatch({ type: EDIT_TODO, payload: { id, text, datetime, category, tags } });
+      dispatch({
+        type: EDIT_TODO,
+        payload: { id, text, datetime, category, tags, priority },
+      });
     }
   };
 
@@ -132,22 +140,37 @@ export function TodoProvider({ children }) {
       if (state.filter.status === "completed" && !todo.completed) return false;
 
       // Filter by category
-      if (state.filter.category && todo.category?.id !== state.filter.category.id) return false;
+      if (
+        state.filter.category &&
+        todo.category?.id !== state.filter.category.id
+      )
+        return false;
 
       // Filter by tags
       if (state.filter.tags.length > 0) {
         const todoTags = new Set(todo.tags);
-        if (!state.filter.tags.every(tag => todoTags.has(tag))) return false;
+        if (!state.filter.tags.every((tag) => todoTags.has(tag))) return false;
       }
 
+      // Filter by priority
+      if (state.filter.priority && todo.priority !== state.filter.priority) return false;
+
       return true;
+    });
+  };
+
+  // Sort todos by priority
+  const getSortedTodos = () => {
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    return getFilteredTodos().sort((a, b) => {
+      return priorityOrder[a.priority || "medium"] - priorityOrder[b.priority || "medium"];
     });
   };
 
   return (
     <TodoContext.Provider
       value={{
-        todos: getFilteredTodos(),
+        todos: getSortedTodos(),
         allTodos: state.todos,
         filter: state.filter,
         summary: state.summary,

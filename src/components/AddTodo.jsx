@@ -12,12 +12,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CategorySelector from "@/components/CategorySelector";
+import { PrioritySelector } from "@/components/ui/priority-selector";
 
 function AddTodo() {
   const [text, setText] = useState("");
   const [selectedDate, setSelectedDate] = useState(undefined);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedPriority, setSelectedPriority] = useState("medium");
   const [open, setOpen] = useState(false);
   const { addTodo } = useTodoContext();
 
@@ -38,11 +40,12 @@ function AddTodo() {
         date.setMinutes(parseInt(minutes, 10));
         datetime = date.toISOString();
       }
-      addTodo(text, datetime, selectedCategory);
+      addTodo(text, datetime, selectedCategory, [], selectedPriority);
       setText("");
       setSelectedDate(undefined);
       setSelectedTime("");
       setSelectedCategory(null);
+      setSelectedPriority("medium");
       setOpen(false);
     }
   };
@@ -88,6 +91,11 @@ function AddTodo() {
         <CategorySelector
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
+        />
+        <PrioritySelector
+          value={selectedPriority}
+          onChange={setSelectedPriority}
+          className="flex-none"
         />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>

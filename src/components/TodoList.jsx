@@ -22,8 +22,8 @@ function TodoList() {
           todo={todo}
           onToggle={() => toggleTodo(todo.id)}
           onDelete={() => deleteTodo(todo.id)}
-          onEdit={(text, datetime, category) => 
-            editTodo(todo.id, text, datetime, category)
+          onEdit={(id, text, datetime, category, tags, priority) => 
+            editTodo(id, text, datetime, category, tags, priority)
           }
         />
       ))}

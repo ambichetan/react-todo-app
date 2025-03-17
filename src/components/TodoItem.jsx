@@ -15,13 +15,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { CategoryBadge } from "@/components/ui/category-badge";
+import CategorySelector from "@/components/CategorySelector";
+import { useCategoryContext } from "@/context/CategoryContext";
 
 function TodoItem({ todo, onToggle, onDelete, onEdit }) {
+  const { categories } = useCategoryContext();
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
   const [selectedDate, setSelectedDate] = useState(
     todo.datetime ? new Date(todo.datetime) : undefined
   );
+  const [selectedCategory, setSelectedCategory] = useState(todo.category);
   const [selectedTime, setSelectedTime] = useState(
     todo.datetime ? format(new Date(todo.datetime), "HH:mm") : ""
   );
@@ -53,8 +58,15 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
           console.error("Error creating datetime:", e);
         }
       }
-      onEdit(todo.id, editText, datetime);
+      onEdit(todo.id, editText, datetime, selectedCategory);
       setIsEditing(false);
+    }
+  };
+
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);
+    if (!isEditing) {
+      onEdit(todo.id, todo.text, todo.datetime, category);
     }
   };
 
@@ -86,7 +98,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         day: "numeric",
         hour: "numeric",
         minute: "2-digit",
-        hour12: true
+        hour12: true,
       }).format(date);
     } catch (e) {
       console.error("Error formatting date:", e);
@@ -97,67 +109,82 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   return (
     <li className="group flex flex-wrap items-center gap-4 py-3 px-3 border-b border-border">
       <div className="flex items-center gap-4 flex-1 min-w-[200px]">
-          <Checkbox
-            checked={todo.completed}
-            onCheckedChange={onToggle}
-            className="h-[22px] w-[22px] rounded-full"
-          />
+        <Checkbox
+          checked={todo.completed}
+          onCheckedChange={onToggle}
+          className="h-[22px] w-[22px] rounded-full"
+        />
 
-        {isEditing ? (
-          <Input
-            ref={inputRef}
-            type="text"
-            className="flex-1"
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSave()}
-          />
-        ) : (
-          <span
-            className={`flex-1 text-base ${
-              todo.completed
-                ? "text-muted-foreground line-through"
-                : "text-foreground"
-            }`}
-          >
-            {todo.text}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {isEditing ? (
+            <Input
+              ref={inputRef}
+              type="text"
+              className="flex-1"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSave()}
+            />
+          ) : (
+            <div className="flex flex-col gap-1">
+              <span
+                className={`text-base ${
+                  todo.completed
+                    ? "text-muted-foreground line-through"
+                    : "text-foreground"
+                }`}
+              >
+                {todo.text}
+              </span>
+              {todo.category && (
+                <CategoryBadge category={todo.category} className="w-fit" />
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-4 flex-1 min-w-[200px]">
-        {isEditing ? (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex-1 justify-start text-left font-normal"
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate
-                  ? format(selectedDate, "MMM d, yyyy")
-                  : "Select date"}
-                {selectedTime ? ` at ${selectedTime}` : ""}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                initialFocus
-              />
-              {footer}
-            </PopoverContent>
-          </Popover>
-        ) : (
-          <div className="flex items-center gap-2 flex-1">
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground font-medium">
-              {formatDateTime(todo.datetime) || "No date set"}
-            </span>
-          </div>
-        )}
+      <div className="flex items-center gap-4 flex-1 min-w-[350px]">
+        <div className="flex gap-2 flex-1">
+          {isEditing && (
+            <CategorySelector
+              selectedCategory={selectedCategory}
+              onSelectCategory={handleSelectCategory}
+            />
+          )}
+          {isEditing ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex-1 justify-start text-left font-normal"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {selectedDate
+                    ? format(selectedDate, "MMM d, yyyy")
+                    : "Select date"}
+                  {selectedTime ? ` at ${selectedTime}` : ""}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  initialFocus
+                />
+                {footer}
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <div className="flex items-center gap-2 flex-1">
+              <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground font-medium">
+                {formatDateTime(todo.datetime) || "No date set"}
+              </span>
+            </div>
+          )}
+        </div>
 
         <div className="flex gap-3 opacity-100 md:opacity-0 transition-opacity group-hover:opacity-100 items-center">
           {isEditing ? (

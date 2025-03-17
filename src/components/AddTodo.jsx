@@ -11,11 +11,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import CategorySelector from "@/components/CategorySelector";
 
 function AddTodo() {
   const [text, setText] = useState("");
   const [selectedDate, setSelectedDate] = useState(undefined);
   const [selectedTime, setSelectedTime] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [open, setOpen] = useState(false);
   const { addTodo } = useTodoContext();
 
@@ -36,10 +38,11 @@ function AddTodo() {
         date.setMinutes(parseInt(minutes, 10));
         datetime = date.toISOString();
       }
-      addTodo(text, datetime);
+      addTodo(text, datetime, selectedCategory);
       setText("");
       setSelectedDate(undefined);
       setSelectedTime("");
+      setSelectedCategory(null);
       setOpen(false);
     }
   };
@@ -81,7 +84,11 @@ function AddTodo() {
           aria-label="Add a new reminder"
         />
       </div>
-      <div className="flex-1 min-w-[200px]">
+      <div className="flex gap-2 flex-1 min-w-[350px]">
+        <CategorySelector
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button

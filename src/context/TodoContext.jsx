@@ -8,6 +8,11 @@ const initialState = {
   todos: JSON.parse(localStorage.getItem("todos")) || [],
   summary: "",
   loadingSummary: false,
+  filter: {
+    category: null,
+    tags: [],
+    status: "all", // all, active, completed
+  },
 };
 
 // Action types
@@ -31,6 +36,8 @@ function todoReducer(state, action) {
             text: action.payload.text,
             datetime: action.payload.datetime || "",
             completed: false,
+            category: action.payload.category || null,
+            tags: action.payload.tags || [],
           },
         ],
       };
@@ -71,6 +78,14 @@ function todoReducer(state, action) {
         ...state,
         loadingSummary: action.payload,
       };
+    case "SET_FILTER":
+      return {
+        ...state,
+        filter: {
+          ...state.filter,
+          ...action.payload,
+        },
+      };
     default:
       return state;
   }
@@ -86,9 +101,9 @@ export function TodoProvider({ children }) {
   }, [state.todos]);
 
   // Action creators
-  const addTodo = (text, datetime) => {
+  const addTodo = (text, datetime, category = null, tags = []) => {
     if (text.trim()) {
-      dispatch({ type: ADD_TODO, payload: { text, datetime } });
+      dispatch({ type: ADD_TODO, payload: { text, datetime, category, tags } });
     }
   };
 
@@ -100,22 +115,48 @@ export function TodoProvider({ children }) {
     dispatch({ type: DELETE_TODO, payload: id });
   };
 
-  const editTodo = (id, text, datetime) => {
+  const editTodo = (id, text, datetime, category = null, tags = []) => {
     if (text.trim()) {
-      dispatch({ type: EDIT_TODO, payload: { id, text, datetime } });
+      dispatch({ type: EDIT_TODO, payload: { id, text, datetime, category, tags } });
     }
+  };
+
+  const setFilter = (filter) => {
+    dispatch({ type: "SET_FILTER", payload: filter });
+  };
+
+  const getFilteredTodos = () => {
+    return state.todos.filter((todo) => {
+      // Filter by status
+      if (state.filter.status === "active" && todo.completed) return false;
+      if (state.filter.status === "completed" && !todo.completed) return false;
+
+      // Filter by category
+      if (state.filter.category && todo.category?.id !== state.filter.category.id) return false;
+
+      // Filter by tags
+      if (state.filter.tags.length > 0) {
+        const todoTags = new Set(todo.tags);
+        if (!state.filter.tags.every(tag => todoTags.has(tag))) return false;
+      }
+
+      return true;
+    });
   };
 
   return (
     <TodoContext.Provider
       value={{
-        todos: state.todos,
+        todos: getFilteredTodos(),
+        allTodos: state.todos,
+        filter: state.filter,
         summary: state.summary,
         loadingSummary: state.loadingSummary,
         addTodo,
         toggleTodo,
         deleteTodo,
         editTodo,
+        setFilter,
         generateSummary,
         dispatch,
       }}

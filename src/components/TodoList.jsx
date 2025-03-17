@@ -1,8 +1,8 @@
 import TodoItem from './TodoItem'
 import { useTodoContext } from '../context/TodoContext'
 
-function TodoList({ todos }) {
-  const { toggleTodo, deleteTodo, editTodo } = useTodoContext()
+function TodoList() {
+  const { todos, toggleTodo, deleteTodo, editTodo } = useTodoContext()
 
   if (todos.length === 0) {
     return (
@@ -22,7 +22,9 @@ function TodoList({ todos }) {
           todo={todo}
           onToggle={() => toggleTodo(todo.id)}
           onDelete={() => deleteTodo(todo.id)}
-          onEdit={(text, datetime) => editTodo(todo.id, text, datetime)}
+          onEdit={(text, datetime, category) => 
+            editTodo(todo.id, text, datetime, category)
+          }
         />
       ))}
     </ul>

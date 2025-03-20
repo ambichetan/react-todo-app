@@ -40,6 +40,8 @@ function todoReducer(state, action) {
             category: action.payload.category || null,
             tags: action.payload.tags || [],
             priority: action.payload.priority || "medium",
+            recurrence: action.payload.recurrence || "none",
+            originalDueDate: action.payload.datetime || "",
           },
         ],
       };
@@ -69,6 +71,7 @@ function todoReducer(state, action) {
                 category: action.payload.category,
                 tags: action.payload.tags,
                 priority: action.payload.priority || todo.priority,
+                recurrence: action.payload.recurrence || todo.recurrence,
               }
             : todo
         ),
@@ -106,9 +109,9 @@ export function TodoProvider({ children }) {
   }, [state.todos]);
 
   // Action creators
-  const addTodo = (text, datetime, category = null, tags = [], priority = "medium") => {
+  const addTodo = (text, datetime, category = null, tags = [], priority = "medium", recurrence = "none") => {
     if (text.trim()) {
-      dispatch({ type: ADD_TODO, payload: { text, datetime, category, tags, priority } });
+      dispatch({ type: ADD_TODO, payload: { text, datetime, category, tags, priority, recurrence } });
     }
   };
 
@@ -120,14 +123,65 @@ export function TodoProvider({ children }) {
     dispatch({ type: DELETE_TODO, payload: id });
   };
 
-  const editTodo = (id, text, datetime, category = null, tags = [], priority) => {
+  const editTodo = (id, text, datetime, category = null, tags = [], priority, recurrence) => {
     if (text.trim()) {
       dispatch({
         type: EDIT_TODO,
-        payload: { id, text, datetime, category, tags, priority },
+        payload: { id, text, datetime, category, tags, priority, recurrence },
       });
     }
   };
+
+  // Helper function to calculate next occurrence
+  const getNextOccurrence = (date, recurrence) => {
+    if (!date || recurrence === "none") return null;
+    
+    const nextDate = new Date(date);
+    
+    switch (recurrence) {
+      case "daily":
+        nextDate.setDate(nextDate.getDate() + 1);
+        break;
+      case "weekly":
+        nextDate.setDate(nextDate.getDate() + 7);
+        break;
+      case "monthly":
+        nextDate.setMonth(nextDate.getMonth() + 1);
+        break;
+      case "yearly":
+        nextDate.setFullYear(nextDate.getFullYear() + 1);
+        break;
+      default:
+        return null;
+    }
+    
+    return nextDate.toISOString();
+  };
+
+  // Effect to handle recurring todos
+  useEffect(() => {
+    const now = new Date();
+    state.todos.forEach(todo => {
+      if (todo.recurrence !== "none" && todo.datetime && !todo.completed) {
+        const dueDate = new Date(todo.datetime);
+        if (dueDate < now) {
+          // Create next occurrence
+          const nextDate = getNextOccurrence(todo.datetime, todo.recurrence);
+          if (nextDate) {
+            editTodo(
+              todo.id,
+              todo.text,
+              nextDate,
+              todo.category,
+              todo.tags,
+              todo.priority,
+              todo.recurrence
+            );
+          }
+        }
+      }
+    });
+  }, [state.todos]);
 
   const setFilter = (filter) => {
     dispatch({ type: "SET_FILTER", payload: filter });

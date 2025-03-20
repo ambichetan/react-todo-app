@@ -15,7 +15,7 @@ const priorityIcons = {
 
 export function PrioritySelector({ value = "medium", onChange, className }) {
   return (
-    <div className={cn("flex gap-2", className)}>
+    <div className={cn("flex items-center gap-3 h-fit", className)}>
       {Object.entries(priorityColors).map(([priority, colorClass]) => (
         <button
           key={priority}
@@ -23,7 +23,9 @@ export function PrioritySelector({ value = "medium", onChange, className }) {
           className={cn(
             "px-2 py-0.5 rounded-md font-medium transition-colors",
             colorClass,
-            value === priority ? "ring-2 ring-offset-2" : "opacity-70 hover:opacity-100"
+            value === priority
+              ? "ring-2 ring-offset-2"
+              : "opacity-70 hover:opacity-100"
           )}
           aria-label={`Set priority to ${priority}`}
         >

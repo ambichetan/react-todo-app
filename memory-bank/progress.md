@@ -26,8 +26,11 @@ Completed Features:
 ### Phase 2: Priority and Due Dates
 - [x] Priority levels (High, Medium, Low)
 - [x] Priority indicators and sorting
-- [ ] Enhanced due date features
-- [ ] Recurring todos
+- [x] Enhanced due date features
+- [x] Recurring todos
+  - Daily, weekly, monthly, yearly recurrence options
+  - Automatic due date updates for recurring todos
+  - Visual indicators for recurring tasks
 - [ ] Reminders/notifications
 
 ### Phase 3: Progress Tracking

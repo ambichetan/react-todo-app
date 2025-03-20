@@ -5,6 +5,7 @@ import {
   CheckIcon,
   CalendarIcon,
 } from "@radix-ui/react-icons";
+import { FaRotateRight } from "react-icons/fa6";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { CategoryBadge } from "@/components/ui/category-badge";
 import { PrioritySelector, PriorityBadge } from "@/components/ui/priority-selector";
+import { RecurrenceSelector } from "@/components/ui/recurrence-selector";
 import CategorySelector from "@/components/CategorySelector";
 import { useCategoryContext } from "@/context/CategoryContext";
 
@@ -32,6 +34,7 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
     todo.datetime ? format(new Date(todo.datetime), "HH:mm") : ""
   );
   const [selectedPriority, setSelectedPriority] = useState(todo.priority || "medium");
+  const [selectedRecurrence, setSelectedRecurrence] = useState(todo.recurrence || "none");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -66,7 +69,8 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         datetime,
         selectedCategory,
         todo.tags || [],
-        selectedPriority
+        selectedPriority,
+        selectedRecurrence
       );
       setIsEditing(false);
     }
@@ -81,7 +85,8 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         todo.datetime,
         category,
         todo.tags || [],
-        todo.priority
+        todo.priority,
+        todo.recurrence
       );
     }
   };
@@ -157,21 +162,29 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
             />
           ) : (
             <div className="flex flex-col gap-1 flex-1">
-              <div className="flex items-center gap-2">
-                <span
-                  className={`text-base ${
-                    todo.completed
-                      ? "text-muted-foreground line-through"
-                      : "text-foreground"
-                  }`}
-                >
-                  {todo.text}
-                </span>
-                <PriorityBadge priority={todo.priority} />
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-base ${
+                      todo.completed
+                        ? "text-muted-foreground line-through"
+                        : "text-foreground"
+                    }`}
+                  >
+                    {todo.text}
+                  </span>
+                  <PriorityBadge priority={todo.priority} />
+                  {todo.recurrence !== "none" && (
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <FaRotateRight className="h-3 w-3" />
+                      <span className="capitalize">{todo.recurrence}</span>
+                    </div>
+                  )}
+                </div>
+                {todo.category && (
+                  <CategoryBadge category={todo.category} className="w-fit" />
+                )}
               </div>
-              {todo.category && (
-                <CategoryBadge category={todo.category} className="w-fit" />
-              )}
             </div>
           )}
         </div>
@@ -186,11 +199,17 @@ function TodoItem({ todo, onToggle, onDelete, onEdit }) {
                 onSelectCategory={handleSelectCategory}
                 className="flex-1"
               />
-              <PrioritySelector
-                value={selectedPriority}
-                onChange={handlePriorityChange}
-                className="flex-none"
-              />
+              <div className="flex gap-2">
+                <PrioritySelector
+                  value={selectedPriority}
+                  onChange={handlePriorityChange}
+                  className="flex-none"
+                />
+                <RecurrenceSelector
+                  value={selectedRecurrence}
+                  onChange={setSelectedRecurrence}
+                />
+              </div>
             </>
           )}
           {isEditing ? (

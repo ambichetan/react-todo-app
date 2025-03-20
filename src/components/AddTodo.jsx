@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/popover";
 import CategorySelector from "@/components/CategorySelector";
 import { PrioritySelector } from "@/components/ui/priority-selector";
+import { RecurrenceSelector } from "@/components/ui/recurrence-selector";
 
 function AddTodo() {
   const [text, setText] = useState("");
@@ -20,6 +21,7 @@ function AddTodo() {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedPriority, setSelectedPriority] = useState("medium");
+  const [selectedRecurrence, setSelectedRecurrence] = useState("none");
   const [open, setOpen] = useState(false);
   const { addTodo } = useTodoContext();
   const inputRef = useRef(null);
@@ -41,12 +43,13 @@ function AddTodo() {
         date.setMinutes(parseInt(minutes, 10));
         datetime = date.toISOString();
       }
-      addTodo(text, datetime, selectedCategory, [], selectedPriority);
+      addTodo(text, datetime, selectedCategory, [], selectedPriority, selectedRecurrence);
       setText("");
       setSelectedDate(undefined);
       setSelectedTime("");
       setSelectedCategory(null);
       setSelectedPriority("medium");
+      setSelectedRecurrence("none");
       setOpen(false);
       inputRef.current?.focus();
     }
@@ -100,7 +103,12 @@ function AddTodo() {
           onChange={setSelectedPriority}
           className="flex-none"
         />
-        <Popover open={open} onOpenChange={setOpen}>
+        <div className="flex gap-2">
+          <RecurrenceSelector
+            value={selectedRecurrence}
+            onChange={setSelectedRecurrence}
+          />
+          <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" className="flex-1 justify-start text-left font-normal">
               <CalendarIcon className="mr-2 h-4 w-4" />
@@ -118,7 +126,8 @@ function AddTodo() {
             />
             {footer}
           </PopoverContent>
-        </Popover>
+          </Popover>
+        </div>
       </div>
       <Button
         type="submit"

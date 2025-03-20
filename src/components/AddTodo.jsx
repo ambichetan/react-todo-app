@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useTodoContext } from "../context/TodoContext";
@@ -22,6 +22,7 @@ function AddTodo() {
   const [selectedPriority, setSelectedPriority] = useState("medium");
   const [open, setOpen] = useState(false);
   const { addTodo } = useTodoContext();
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (selectedDate && !selectedTime) {
@@ -47,6 +48,7 @@ function AddTodo() {
       setSelectedCategory(null);
       setSelectedPriority("medium");
       setOpen(false);
+      inputRef.current?.focus();
     }
   };
 
@@ -76,18 +78,19 @@ function AddTodo() {
   );
 
   return (
-    <form className="flex flex-wrap gap-3 mb-6" onSubmit={handleSubmit}>
-      <div className="flex-1 min-w-[200px]">
+    <form className="flex w-full gap-3 mb-6" onSubmit={handleSubmit}>
+      <div className="flex-1">
         <Input
           type="text"
-          className="w-full"
+          className="w-full mb-3"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="New Reminder"
           aria-label="Add a new reminder"
+          ref={inputRef}
         />
       </div>
-      <div className="flex gap-2 flex-1 min-w-[350px]">
+      <div className="flex gap-2 flex-1">
         <CategorySelector
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
@@ -99,15 +102,11 @@ function AddTodo() {
         />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="flex-1 justify-start text-left font-normal"
-            >
+            <Button variant="outline" className="flex-1 justify-start text-left font-normal">
               <CalendarIcon className="mr-2 h-4 w-4" />
               {selectedDate
-                ? format(selectedDate, "MMM d, yyyy")
+                ? format(selectedDate, "MMM d, yyyy") + (selectedTime ? ` at ${selectedTime}` : "")
                 : "Select date"}
-              {selectedTime ? ` at ${selectedTime}` : ""}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -124,7 +123,7 @@ function AddTodo() {
       <Button
         type="submit"
         size="icon"
-        className="rounded-full"
+        className="rounded-md"
         aria-label="Add reminder"
         disabled={!text.trim()}
       >

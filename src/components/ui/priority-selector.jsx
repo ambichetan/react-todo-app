@@ -21,7 +21,7 @@ export function PrioritySelector({ value = "medium", onChange, className }) {
           key={priority}
           onClick={() => onChange(priority)}
           className={cn(
-            "px-3 py-1 rounded-md text-sm font-medium transition-colors",
+            "px-2 py-0.5 rounded-md font-medium transition-colors",
             colorClass,
             value === priority ? "ring-2 ring-offset-2" : "opacity-70 hover:opacity-100"
           )}
@@ -38,7 +38,7 @@ export function PriorityBadge({ priority = "medium", className }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium",
+        "inline-flex items-center shrink-0 px-2 py-0.5 rounded text-xs font-medium",
         priorityColors[priority],
         className
       )}

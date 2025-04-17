@@ -3,9 +3,17 @@ import { generateSummary } from "./SummaryGenerator";
 
 const TodoContext = createContext();
 
+// Migrate existing todos to include subtasks array if missing
+const migrateExistingTodos = (todos) => {
+  return todos.map(todo => ({
+    ...todo,
+    subtasks: todo.subtasks || [] // Add empty subtasks array if it doesn't exist
+  }));
+};
+
 // Initial state
 const initialState = {
-  todos: JSON.parse(localStorage.getItem("todos")) || [],
+  todos: migrateExistingTodos(JSON.parse(localStorage.getItem("todos")) || []),
   summary: "",
   loadingSummary: false,
   filter: {
@@ -23,6 +31,10 @@ const DELETE_TODO = "DELETE_TODO";
 const EDIT_TODO = "EDIT_TODO";
 const SET_SUMMARY = "SET_SUMMARY";
 const SET_LOADING_SUMMARY = "SET_LOADING_SUMMARY";
+const ADD_SUBTASK = "ADD_SUBTASK";
+const TOGGLE_SUBTASK = "TOGGLE_SUBTASK";
+const DELETE_SUBTASK = "DELETE_SUBTASK";
+const EDIT_SUBTASK = "EDIT_SUBTASK";
 
 // Reducer function
 function todoReducer(state, action) {
@@ -42,6 +54,7 @@ function todoReducer(state, action) {
             priority: action.payload.priority || "medium",
             recurrence: action.payload.recurrence || "none",
             originalDueDate: action.payload.datetime || "",
+            subtasks: [], // Initialize empty subtasks array
           },
         ],
       };
@@ -50,7 +63,15 @@ function todoReducer(state, action) {
         ...state,
         todos: state.todos.map((todo) =>
           todo.id === action.payload
-            ? { ...todo, completed: !todo.completed }
+            ? { 
+                ...todo, 
+                completed: !todo.completed,
+                // When marking a todo complete, mark all subtasks complete
+                subtasks: todo.subtasks.map(subtask => ({
+                  ...subtask,
+                  completed: !todo.completed
+                }))
+              }
             : todo
         ),
       };
@@ -72,6 +93,71 @@ function todoReducer(state, action) {
                 tags: action.payload.tags,
                 priority: action.payload.priority || todo.priority,
                 recurrence: action.payload.recurrence || todo.recurrence,
+              }
+            : todo
+        ),
+      };
+    case ADD_SUBTASK:
+      return {
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload.todoId
+            ? {
+                ...todo,
+                subtasks: [
+                  ...todo.subtasks,
+                  {
+                    id: Date.now(),
+                    text: action.payload.text,
+                    completed: false,
+                  },
+                ],
+              }
+            : todo
+        ),
+      };
+    case TOGGLE_SUBTASK:
+      return {
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload.todoId
+            ? {
+                ...todo,
+                subtasks: todo.subtasks.map((subtask) =>
+                  subtask.id === action.payload.subtaskId
+                    ? { ...subtask, completed: !subtask.completed }
+                    : subtask
+                ),
+              }
+            : todo
+        ),
+      };
+    case DELETE_SUBTASK:
+      return {
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload.todoId
+            ? {
+                ...todo,
+                subtasks: todo.subtasks.filter(
+                  (subtask) => subtask.id !== action.payload.subtaskId
+                ),
+              }
+            : todo
+        ),
+      };
+    case EDIT_SUBTASK:
+      return {
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload.todoId
+            ? {
+                ...todo,
+                subtasks: todo.subtasks.map((subtask) =>
+                  subtask.id === action.payload.subtaskId
+                    ? { ...subtask, text: action.payload.text }
+                    : subtask
+                ),
               }
             : todo
         ),
@@ -129,6 +215,27 @@ export function TodoProvider({ children }) {
         type: EDIT_TODO,
         payload: { id, text, datetime, category, tags, priority, recurrence },
       });
+    }
+  };
+
+  // Subtask actions
+  const addSubtask = (todoId, text) => {
+    if (text.trim()) {
+      dispatch({ type: ADD_SUBTASK, payload: { todoId, text } });
+    }
+  };
+
+  const toggleSubtask = (todoId, subtaskId) => {
+    dispatch({ type: TOGGLE_SUBTASK, payload: { todoId, subtaskId } });
+  };
+
+  const deleteSubtask = (todoId, subtaskId) => {
+    dispatch({ type: DELETE_SUBTASK, payload: { todoId, subtaskId } });
+  };
+
+  const editSubtask = (todoId, subtaskId, text) => {
+    if (text.trim()) {
+      dispatch({ type: EDIT_SUBTASK, payload: { todoId, subtaskId, text } });
     }
   };
 
@@ -233,6 +340,10 @@ export function TodoProvider({ children }) {
         toggleTodo,
         deleteTodo,
         editTodo,
+        addSubtask,
+        toggleSubtask,
+        deleteSubtask,
+        editSubtask,
         setFilter,
         generateSummary,
         dispatch,

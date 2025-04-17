@@ -23,7 +23,7 @@ Completed Features:
 - Category-based filtering
 - Persistent category data
 
-### Phase 2: Priority and Due Dates
+### Phase 2: Priority and Due Dates ✓
 - [x] Priority levels (High, Medium, Low)
 - [x] Priority indicators and sorting
 - [x] Enhanced due date features
@@ -34,7 +34,11 @@ Completed Features:
 - [ ] Reminders/notifications
 
 ### Phase 3: Progress Tracking
-- [ ] Subtasks functionality
+- [x] Subtasks functionality
+  - Add/edit/delete subtasks
+  - Individual completion tracking
+  - Synchronization with parent todo completion
+  - Persistent subtask data
 - [ ] Progress visualization
 - [ ] Completion statistics
 - [ ] Daily/weekly views
@@ -66,7 +70,9 @@ Completed Features:
 
 ## Current Status
 - Core application is functional with basic features
-- Ready to begin implementing enhanced features
+- Subtasks implementation complete
+- Categories, priorities, and recurring todos working
+- Ready to implement progress visualization features
 - Architecture can support planned expansions
 
 ## Known Issues
